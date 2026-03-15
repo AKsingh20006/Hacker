@@ -363,7 +363,7 @@
         "# Call the chatbot function to start the interaction\n",
         "run_chatbot()"
       ],
-      "execution_count": null,
+      "execution_count": None,
       "outputs": [
         {
           "output_type": "stream",
