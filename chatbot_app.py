@@ -4,7 +4,7 @@
   "metadata": {
     "colab": {
       "provenance": [],
-      "authorship_tag": "ABX9TyPpgtkSm1kre2ZgmAJctsaH",
+      "authorship_tag": "ABX9TyO61NSptjSDyxdOFD3LxJjU",
       "include_colab_link": true
     },
     "kernelspec": {
@@ -100,32 +100,44 @@
           "base_uri": "https://localhost:8080/"
         },
         "id": "144b979d",
-        "outputId": "5fcc0419-4561-43d9-9673-fdceac294b5e"
+        "outputId": "67fd19b2-154d-41ad-850d-92008c59e13e"
       },
       "source": [
-        "%%writefile app.py\n",
         "import streamlit as st\n",
         "\n",
-        "# dataset\n",
+        "# Page title\n",
+        "st.set_page_config(page_title=\"Student Assistant Chatbot\")\n",
+        "\n",
+        "st.title(\"🎓 Student Assistant Chatbot\")\n",
+        "st.write(\"Ask about exams, assignments, courses, or faculty information.\")\n",
+        "\n",
+        "# Course dataset\n",
         "courses = {\n",
         "    \"data mining\": {\n",
         "        \"exam\": \"25 March\",\n",
         "        \"assignment\": \"20 March\",\n",
-        "        \"faculty\": \"Dr Sharma\",\n",
+        "        \"faculty\": \"Dr. Sharma\",\n",
         "        \"email\": \"sharma@college.edu\"\n",
         "    },\n",
         "    \"artificial intelligence\": {\n",
         "        \"exam\": \"28 March\",\n",
         "        \"assignment\": \"22 March\",\n",
-        "        \"faculty\": \"Dr Mehta\",\n",
+        "        \"faculty\": \"Dr. Mehta\",\n",
         "        \"email\": \"mehta@college.edu\"\n",
+        "    },\n",
+        "    \"data structures\": {\n",
+        "        \"exam\": \"30 March\",\n",
+        "        \"assignment\": \"24 March\",\n",
+        "        \"faculty\": \"Dr. Rao\",\n",
+        "        \"email\": \"rao@college.edu\"\n",
         "    }\n",
         "}\n",
         "\n",
-        "st.title(\"Student Assistant Chatbot\")\n",
+        "# Initialize chat history\n",
+        "if \"messages\" not in st.session_state:\n",
+        "    st.session_state.messages = []\n",
         "\n",
-        "user_input = st.text_input(\"Ask a question\")\n",
-        "\n",
+        "# Function to generate response\n",
         "def chatbot_response(question):\n",
         "    question = question.lower()\n",
         "\n",
@@ -133,27 +145,61 @@
         "        if course in question:\n",
         "\n",
         "            if \"exam\" in question:\n",
-        "                return f\"The {course} exam is on {courses[course]['exam']}\"\n",
+        "                return f\"The {course.title()} exam is on {courses[course]['exam']}.\"\n",
         "\n",
         "            elif \"assignment\" in question:\n",
-        "                return f\"The assignment deadline is {courses[course]['assignment']}\"\n",
+        "                return f\"The {course.title()} assignment deadline is {courses[course]['assignment']}.\"\n",
         "\n",
-        "            elif \"faculty\" in question:\n",
-        "                return f\"The faculty is {courses[course]['faculty']} ({courses[course]['email']})\"\n",
+        "            elif \"faculty\" in question or \"teacher\" in question:\n",
+        "                return f\"The faculty for {course.title()} is {courses[course]['faculty']} ({courses[course]['email']}).\"\n",
         "\n",
-        "    return \"I can help with exam dates, assignments, and faculty information.\"\n",
+        "            else:\n",
+        "                return f\"For {course.title()} — Exam: {courses[course]['exam']}, Assignment: {courses[course]['assignment']}, Faculty: {courses[course]['faculty']}.\"\n",
         "\n",
-        "if user_input:\n",
-        "    response = chatbot_response(user_input)\n",
-        "    st.write(\"Bot:\", response)"
+        "    return \"Sorry, I can only help with exam schedules, assignments, courses, and faculty information.\"\n",
+        "\n",
+        "# Display chat history\n",
+        "for message in st.session_state.messages:\n",
+        "    with st.chat_message(message[\"role\"]):\n",
+        "        st.markdown(message[\"content\"])\n",
+        "\n",
+        "# User input\n",
+        "if prompt := st.chat_input(\"Ask a question\"):\n",
+        "    st.session_state.messages.append({\"role\": \"user\", \"content\": prompt})\n",
+        "\n",
+        "    with st.chat_message(\"user\"):\n",
+        "        st.markdown(prompt)\n",
+        "\n",
+        "    response = chatbot_response(prompt)\n",
+        "\n",
+        "    with st.chat_message(\"assistant\"):\n",
+        "        st.markdown(response)\n",
+        "\n",
+        "    st.session_state.messages.append({\"role\": \"assistant\", \"content\": response})"
       ],
-      "execution_count": null,
+      "execution_count": 9,
       "outputs": [
         {
           "output_type": "stream",
-          "name": "stdout",
+          "name": "stderr",
           "text": [
-            "Overwriting app.py\n"
+            "2026-03-15 10:20:57.101 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.104 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.105 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.106 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.109 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.111 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.112 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.113 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.114 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.115 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.117 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.119 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.122 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.125 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.127 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.128 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
+            "2026-03-15 10:20:57.128 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
           ]
         }
       ]
@@ -164,20 +210,17 @@
         "!streamlit run app.py"
       ],
       "metadata": {
+        "id": "NYjWNlXRqY3w",
         "colab": {
           "base_uri": "https://localhost:8080/"
         },
-        "id": "BFmhWjbWpiyI",
-        "outputId": "816732e6-e926-4372-835b-5c6eead3aa26"
+        "outputId": "06a2d1d0-c787-4a36-878e-31b809acf94f"
       },
       "execution_count": null,
       "outputs": [
         {
-          "metadata": {
-            "tags": null
-          },
-          "name": "stdout",
           "output_type": "stream",
+          "name": "stdout",
           "text": [
             "\n",
             "Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.\n",
@@ -197,7 +240,7 @@
       "cell_type": "code",
       "source": [],
       "metadata": {
-        "id": "NYjWNlXRqY3w"
+        "id": "8F5k7PpWBDZi"
       },
       "execution_count": null,
       "outputs": []
